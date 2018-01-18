@@ -1,0 +1,1055 @@
+<html>
+
+<head>
+
+<title>Author</title>
+
+<script type="text/javascript" src="jquery.js" ></script>
+
+<script type="text/javascript" >
+
+function RAND( a, b ) {
+
+var c = Math.floor(Math.random()*(b-a+1)) + a;
+
+return c;
+}
+
+var sentence_template = ["STATEMENT"/*,
+"PREP,DEF_ART,ADJECTIVE,SING_NOUN,of,INDEF_ART,TOPIC.cap,in,INDEF_ART,ADJECTIVE,SING_NOUN,COMMA,INDEF_ART,ADJECTIVE,SING_NOUN,COMMA,ACT.gerund,DEF_ART,SING_NOUN,of,INDEF_ART,SING_NOUN,COMMA,TRANS_VERB.past,DEF_ART,TOPIC,to,TRANS_VERB,ADJECTIVE,PLUR_NOUN,PERIOD",
+"after,NUM,PLUR_NOUN,of,INDEF_ART,ADJECTIVE,SING_NOUN,COMMA,it,seemed,less,like,INDEF_ART,SING_NOUN,to,TRANS_VERB,SING_NOUN,CONJ,far,more,like,INDEF_ART,SING_NOUN,that,would,ADVERB,INTRANS_VERB,PERIOD",
+"in,spite,of,DEF_ART,ADJECTIVE,SING_NOUN,of,ADJECTIVE,TOPIC.cap,COMMA,ADJECTIVE,SING_NOUN,COMMA,and,INDEF_ART,SING_NOUN,COMMA,ADVERB,DEF_ART,SING_NOUN,COMMA,DEF_ART,TOPIC.cap,COMMA,DEF_ART,SING_NOUN,COMMA,and,ADJECTIVE,ADJECTIVE,PLUR_NOUN,remained,INTRANS_VERB.gerund,COMMA,ACT.gerund,DEF_ART,ADJECTIVE,SING_NOUN,of,SING_NOUN,PERIOD",
+"still,more,ADJECTIVE,to,DEF_ART,ADJECTIVE,TOPIC,COMMA,PRO.poss,ADJECTIVE.cap,SING_NOUN.cap,COMMA,as,it,had,been,known,for,centuries,remained,INTRANS_VERB.gerund,PERIOD",
+"CONJ,PRO,TRANS_VERB.past,PRO.poss,SING_NOUN,and,PRO.poss,PLUR_NOUN,PERIOD",
+"for,between,DEF_ART,NUM,PLUR_NOUN,there,WAS,DEF_ART,ADJECTIVE.sup,TOPIC,PERIOD",
+"TOPIC,COMMA,DEF_ART,ADJECTIVE,SING_NOUN,COMMA,should,have,been,ADJECTIVE,COMMA,CONJ,SING_NOUN.cap,ADJECTIVE,PERIOD",
+"PREP,INDEF_ART,SING_NOUN,TOPIC.cap,sent,him,INTRANS_VERB.gerund,PERIOD",
+"CONJ,TOPIC.cap,COMMA,looking,on,felt,that,PRO.poss,own,SING_NOUN,made,SING_NOUN.cap,INTRANS_VERB,ADVERB,COMMA,as,if,DEF_ART,SING_NOUN,had,to,TRANS_VERB,PRO.poss,SING_NOUN,PREP,DEF_ART,ADJECTIVE,SING_NOUN,PERIOD",
+"ADVERB,COMMA,TOPIC.cap,ACT.past,PREP,ADJECTIVE,SING_NOUN,COMMA,CONJ,PREP,DEF_ART,PLUR_NOUN,of,that,ADJECTIVE,SING_NOUN,DEF_ART,ADJECTIVE,INTRANS_VERB.past,PERIOD",
+"it,IS,DEF_ART,duty,of,INDEF_ART,SING_NOUN,to,ACT,PRO.poss,PLUR_NOUN,ADJECTIVE,COMMA,lest,they,TRANS_VERB,PREP,SING_NOUN,PERIOD",
+"so,DEF_ART,TOPIC.cap,ACT.past,no,more,PERIOD",
+"one,thing,PRO,certainly,never,took,upon,himself,COMMA,CONJ,that,WAS,DEF_ART,SING_NOUN,of,SING_NOUN,PERIOD",
+"there,WERE,ADJECTIVE,PLUR_NOUN,among,them,PERIOD",
+"thus,one,morning,when,TOPIC.cap,ACT.past,among,DEF_ART,PLUR_NOUN,CONJ,INTRANS_VERB.past,CONJ,INTRANS_VERB.past,CONJ,decided,that,PRO,would,go,INTRANS_VERB.gerund,COMMA,PRO,found,few,followers,PERIOD",
+"PRO,did,not,argue,PERIOD"*/];
+
+var dialog_template = [ ["CHAR.1,broke the silence,PERIOD","LQ,Well,CHAR.2.first,this is a,SING_NOUN.major.new,that calls for a real,JOB,PERIOD",
+"you're,DESC.comp,than I am,PERIOD","I say we let you,TRANS_VERB,it,PERIOD,RQ","LQ,Whaddya mean,COMMA,I'm,DESC.prev.comp,than you are,QM",
+"We're both,CHAR.2.age,EP,RQ","CHAR.2.pro,was,ADVERB,TRANS_VERB.gerund,CHAR.prev.pro.poss,wad of,FOOD,as,CHAR.prev.pro,talked,PERIOD" ],
+["INDEF_ART.cap,CHAR.4.mw,dressed in,INDEF_ART,ADJECTIVE,COLOR,CLOTHING.male,entered from a,TRANS_VERB.past,doorway,PERIOD",
+"LQ,CHAR.5.first,COMMA,what is happening,QM,RQ",
+"LQ,PLUR_NOUN.major.cap,COMMA,CHAR.4.first,COMMA,RQ,CHAR.5.pro,SAY.past,to,CHAR.4.acc,PERIOD",
+"RQ,ADVERB.cap,DESC,PLUR_NOUN.major.prev,PERIOD",
+"Come,COMMA,join us,PERIOD,RQ,BR"],
+["Another,CHAR.6.mw,I didn't recognize,INTRANS_VERB.past,ADVERB,PERIOD",
+"I guessed,CHAR.prev.acc,to be about,CHAR.prev.age,COMMA,with,DESC,COLOR,hair,COMMA,which was graying around the,FACIAL,PERIOD",
+"CHAR.3.first,apparently recognized,CHAR.6.acc,COMMA,as,CHAR.3.pro,asked for no,SING_NOUN,PERIOD",
+"LQ,How,DESC,is it,QM,RQ,CHAR.3.pro,SAY.past,PERIOD",
+"LQ,ADVERB.cap,ADJECTIVE,COMMA,RQ,SAY.past,the stranger,COMMA,SAY.gerund,in a,DESC,COMMA,DESC,voice,PERIOD",
+"LQ,The,PLUR_NOUN.cap.major,TRANS_VERB.past,CHAR.5.acc,in the,BODY,PERIOD",
+"CHAR.5.pro,is lucky to be,DESC,PERIOD",
+"There is another,SING_NOUN,inside,COMMA,CONJ,it is too,ADJECTIVE,to,TRANS_VERB,without,INDEF_ART,DESC,JOB,PERIOD,RQ",
+"LQ,I will,INTRANS_VERB,COMMA,RQ,SAY.past,the,CHAR.5.mw,PREP,the,FURNITURE,PERIOD,BR"],
+["TRANS_VERB.gerund,me for the first time,COMMA,the,DESC,voiced,newcomer,TRANS_VERB.past,me,ADVERB,COMMA,and then,CHAR.4.first,PERIOD",
+"LQ,Who is this,QM,RQ",
+"LQ,Our,ADVERB,DESC,SING_NOUN.major,to,TRANS_VERB,PERIOD,RQ",
+"LQ,DESC.cap,or,DESC,QM,RQ,CHAR.1.pro,SAY.past,PERIOD",
+"CHAR.4.pro,shook,CHAR.4.pro.poss,FACIAL,PERIOD",
+"LQ,DESC.cap,PERIOD",
+"CHAR.0..pro,was supposed to,TRANS_VERB,TIME,PERIOD",
+"In fact,CHAR.0.pro,did,TRANS_VERB.prev,but,CHAR.0.pro,was,ADVERB,captured at,PLACE,COMMA,RQ",
+"The stranger,SAY.past,PERIOD",
+"RQ,TIME.cap,I fear it is only a matter of,TU.plur,PERIOD,PERIOD,PERIOD,RQ,BR"],
+["LQ,CHAR.2.address,COMMA,RQ,CHAR.3.pro,SAY.past,COMMA,LQ,you are a thoroughly,DESC,CHAR.2.mw,COMMA,and deserve to be as,DESC,as you are,TIME,PERIOD",
+"My,BODY.major,upon it,EXC",
+"CHAR.2.first,COMMA,I give you,EMOTION,COMMA,my,CHAR.prev.bg,PERIOD",
+"My,SING_NOUN.major.prev,upon that, too,EXC",
+"CHAR.1.first,COMMA,TRANS_VERB,the,SING_NOUN,COMMA,and make it,INDEF_ART,ADJECTIVE,one,EXC",
+"and,CHAR.2.address,unless you can induce your,DESC,RELATION,to,INTRANS_VERB,(,for whom I,TRANS_VERB,this seat in the,HPLACE.major.new,),I shall,INTRANS_VERB,PERIOD",
+"Any gap in your,SING_NOUN.major.prev,on such a night -- such a gap least of all -- I wouldn't make,COMMA,not for the,PLUR_NOUN,of,PLACE,EXC,RQ,BR"],
+["We had not,INTRANS_VERB.past,many minutes,COMMA,when,CHAR.5.address,COMMA,who usually contrived,EMOTION,about something,COMMA,came,INTRANS_VERB.gerund,in,COMMA,with,CHAR.prev.pro.poss,SING_NOUN,in,CHAR.prev.pro.poss,hand,COMMA,and,SAY.past,COMMA,ADVERB,COMMA,LQ,REMARK,COMMA,CHAR.4.first,COMMA,why didn't you tell me there was some one in the,HPLACE,EXC,RQ"],
+["CHAR.0.first,and,CHAR.1.pro,looked,ADVERB,at eachother,for,INDEF_ART,TU,or,two,PERIOD",
+"LQ,REMARK.cap,PERIOD,Please,TRANS_VERB,COMMA,RQ,SAY.past,CHAR.1.address,PERIOD",
+"LQ,I expected you,TIME,PERIOD,RQ",
+"LQ,I fear,COMMA,RQ,CHAR.1.pro,SAY.past,COMMA,LQ,that this is,INDEF_ART,ADJECTIVE,SING_NOUN,PERIOD",
+"I am not the,JOB,you suppose me,PERIOD",
+"It seems you were looking for,INDEF_ART,SING_NOUN.major.prev,; but for my part,COMMA,nothing was further from my,THOUGHT.plur,--nothing could be more,ADJECTIVE,to my,THOUGHT.plur,--than this,SING_NOUN.major.prev,PERIOD,RQ,BR"]
+]
+
+var action_template = [["On glancing over my,SING_NOUN.plur,of the,NUM,odd cases in which I have during the last,NUM,TU.plur,TRANS_VERB.past,the methods of my,RELATION,CHAR.0.first,CHAR.0.last,COMMA,I find many,DESC,COMMA,some,DESC,COMMA,INDEF_ART,ADJECTIVE,number,ADVERB,DESC,; for,INTRANS_VERB.gerund,as,CHAR.prev.pro,did rather for the,EMOTION,of,CHAR.prev.pro.poss,art than for the acquirement of,SING_NOUN.plur,COMMA,CHAR.prev.pro,RESPONSE.past,to,associate,CHAR.prev.acc,self with any,EVENT,which did not tend toward the,DESC,COMMA,and even the,DESC,PERIOD",
+"Of all theses,DESC,cases,COMMA,however,COMMA,I cannot recall any that presented,DESC.comp,features than that which was associated with the,DESC,PLACE,family,of the,CHAR.1.last.plur,of,PLACE,PERIOD"
+]/*,
+["Once upon a time,COMMA, there were, bears.", "There was a pap bear, a mama bear, and a little baby bear. Once day, the bears were walking through the woods, and they came back home, and they looked at their cottage.", 
+"The Papa bear raised his gun and began to shoot squirrels from off the trees."]*/
+
+]
+
+var description_template = [["CHAR.full,COMMA,who would later,TRANS_VERB,INDEF_ART,SING_NOUN,of,PLACE,and,DEF_ART,SING_NOUN,of,PLACE,WAS,not listed as a,LQ,JOB,RQ,PERIOD",
+"But,CHAR.prev.pro,WAS,no,DESC,person either,PERIOD","INDEF_ART.cap,DESC,COMMA,DESC,CHAR.prev.mw,of,CHAR.prev.age,COMMA,CHAR.prev.pro,looked,as,if,CHAR.prev.pro,had,INDEF_ART,SING_NOUN,down,DEF_ART,back of,CHAR.prev.pro.poss,CLOTHING.male,PERIOD"],
+["I shall never forget,CHAR.full.poss,face,PERIOD","'Twas a,DESC,COMMA,DESC,COMMA,DESC,face,COMMA,with a seam here and there left by,SICK,but not enough to hurt,CHAR.prev.pro.poss,looks in,INDEF_ART,SING_NOUN.poss,eye,though,CHAR.prev.pro,had it badish when,CHAR.prev.pro,was,INDEF_ART,DESC,JOB,PERIOD"],
+["CHAR.full,was,INDEF_ART,DESC,CHAR.prev.mw,with,DESC,DESC,features,COMMA,and,CHAR.prev.pro.poss,COLOR,ADJECTIVE,coat,bore on its sleeve,DEF_ART,DESC,WEAPON,that meant,NUM,years' service in the army of,PLACE,PERIOD"],
+["from a,FURNITURE,in the,ADJECTIVE,HPLACE,INDEF_ART,DESC,CHAR.4.mw,had risen and was,coming,toward the,JOB,of,PLACE,with,ADJECTIVE,strides,PERIOD",
+"CHAR.prev.pro,was of,CHAR.3.first.poss,age,COMMA,but,DESC,COMMA,with,DESC,DESC,hair,and,COLOR,eyes,PERIOD",
+"CHAR.4.pro.poss,DESC,face,was,ADVERB,smiling as,CHAR.prev.pro,greeted,the newcomer,in,CHAR.prev.pro.poss,DESC,DESC,voice,PERIOD,BR"],
+["CHAR.full,was not yet,CHAR.prev.age,COMMA,but,CHAR.prev.pro,counted,CHAR.prev.acc,self,INDEF_ART,DESC,CHAR.prev.mw,COMMA,and,ADVERB,INDEF_ART,JOB,into the bargain,PERIOD",
+"CHAR.prev.bg.plur,were,ADVERB,formed in that,DESC,COMMA,DESC,epoch;,and when one has been in,INDEF_ART,ADJECTIVE,EVENT,and,NUM,EVENT.plur,COMMA,has,TRANS_VERB.past,one's,ANIMAL,in,DESC,fashion,COMMA,and knows a thing or two of,SING_NOUN,and,SING_NOUN,COMMA,a certain swagger in the gait is surely to be pardoned,PERIOD"],
+["On,INDEF_ART,FURNITURE,PREP,the,HPLACE,COMMA,and,ADVERB,facing,CHAR.5.first,as,CHAR.prev.pro,INTRANS_VERB.past,COMMA,sat,INDEF_ART,DESC,DESC,CHAR.0.mw,in,INDEF_ART,ADJECTIVE,CLOTHING.male,PERIOD",
+"CHAR.prev.pro,sat with,CHAR.prev.pro.poss,legs,INTRANS_VERB.past,and,CHAR.prev.pro.poss,hands,INTRANS_VERB.past,COMMA,and,INDEF_ART,VESSEL,of,ADJECTIVE,FOOD,stood by,CHAR.prev.pro.poss,BODY,on,INDEF_ART,FURNITURE,on the wall,PERIOD",
+"CHAR.prev.pro.poss,countenance had,INDEF_ART,DESC,ADJECTIVE,cast--not properly,DESC,but such as we see in the,ANIMAL,COMMA,the,ANIMAL,COMMA,or the,DESC,ANIMAL,COMMA,--something,DESC,and,DESC,COMMA,something,DESC,COMMA,DESC,COMMA,and,DESC,PERIOD",
+"The,ADJECTIVE,FACIAL.plur,were,ADVERB,DESC,COMMA,as though swollen by,SICK,or,SICK,; and the smile,COMMA,the,ADJECTIVE,FACIAL,COMMA,and the,DESC,COMMA,DESC,FACIAL,were,ADVERB,and,almost,ADVERB,DESC,in expression,PERIOD",
+"DESC,COLOR,hair hung,ADVERB,all round,CHAR.prev.pro.poss,head,COMMA,like,INDEF_ART,SING_NOUN.poss,COMMA,and fell in,INDEF_ART,ADJECTIVE,curl upon the,CLOTHING.male,PERIOD",
+"CHAR.prev.pro.poss,FACIAL,and,FACIAL,were the,COLOR,of,DESC,SING_NOUN,PERIOD",
+"CHAR.prev.pro.poss,EMOTION,seemed,ADJECTIVE,and,DESC,COMMA,it fitted so,ADVERB,with,CHAR.prev.pro.poss,looks,PERIOD",
+"Such was,CHAR.prev.first,COMMA,CHAR.prev.full,PERIOD,BR"]
+]
+
+
+
+var elements = [ "DIALOG.1.2,DIALOG.2.1,DIALOG.1.2,DIALOG.2.1"
+
+
+];
+
+var s = {};
+s.time = '';
+s.place = '',
+s.characters = [];
+s.queue = {};
+s.queue.characters = [];
+s.queue.nouns = {all:[], majorSing:[], majorPlur:[]};
+s.queue.verbs = [];
+s.queue.transVerb = [];
+s.queue.intransVerb = [];
+s.queue.adjectives = [];
+s.queue.places = [];
+
+s.indef_art = { queue:false, cap:false };
+s.words = 0;
+
+function Character() {
+
+this.gender = RAND( 0, 1 )? "male" : "female";
+this.male = this.gender=="male";
+this.female = this.gender=="female";
+
+if ( this.male ) {
+this.firstName = w.firstNameMale[ RAND( 0, w.firstNameMale.length-1 ) ];
+this.lastName = w.lastName[ RAND( 0, w.lastName.length-1 ) ];
+this.title = w.titleMale[ RAND( 0, w.titleMale.length-1 ) ];
+this.pronoun = "he";
+this.accusativePronoun = "him";
+this.mw = "man";
+this.bg = "boy";
+}
+else {
+this.firstName = w.firstNameFemale[ RAND( 0, w.firstNameFemale.length-1 ) ];
+this.lastName = w.lastName[ RAND( 0, w.lastName.length-1 ) ];
+this.title = w.titleFemale[ RAND( 0, w.titleFemale.length-1 ) ];
+this.pronoun = "she";
+this.accusativePronoun = "her";
+this.mw = "woman";
+this.bg = "girl"; 
+}
+
+this.age = RAND( 20, 80 );
+
+this.address = this.title + " " + this.lastName;
+this.fullName = this.title + " " + this.firstName + " " + this.lastName;
+this.name = this.firstName + " " + this.lastName;
+
+this.used = false;
+this.location = "default";
+this.significance = RAND( 1, 100 );
+
+return this;
+
+}
+
+var w = { noun:{}, verb:{} };
+w.noun.singular = ["plan","enthusiasm","man","fun","clay","unwillingness","woman","club", "crop","number","operation","captain", "general", "colonel", "magic", "pollution",
+ "exaggeration", "profit", "loot", "gain", "cabbage", "hamburger","stone", "wheelbarrow", "Lego", "heart", "surgery", "contest","concert","trumpet",
+ "violin","violet","flower","water", "word", "knowledge", "hope", "location", "ruffle", "valley", "river", "ocean", "river", "clown", "cash", "kindred", "mortification","fear", "dread", 
+ "possibility","cat", "log", "train", "car", "castle", "boat", "house", "fish", "language", "color", "chair", "cloud", "floor", "sheep", "cabin", "government", "camp", "king", "world",
+  "crown", "wall", "cup", "inventor", "challenge", "book", "bird", "mountain", "airplane", "rope", "joust", "track", "egg", "Constitution", "lemon", "cushion", "furniture", "doll", 
+  "bank", "puzzle", "bread", "victory", "butter", "painter", "computer", "paint", "wisdom", "arm", "pocket", "job", "game", "war", "kingdom", "battle", "clothing",
+  "catastrophe","messenger","archer","locksmith","Pharaoh","basket","gun","grave","death","luck","bomb","coalition","rumor","spy","judge","cotton","welfare","suburb",
+  "campaign","border","invasion","defeat","pike","sword","fight","lance","horse","knight","night","day","morning","tank","machine","pistol","knife","destruction","blow","field",
+  "argument","negotiation","garbage","exaggeration","walnut","pneumonia","clock","bathrobe","soap","MacBook","storm","road","discussion","confusion","extermination","misunderstanding",
+  "friend","enemy","clue","mystery","job","sunshine","sun","star","pickle","chair","table","Bosendorff",
+  "board","log","fire","velvet","song","paper","newspaper","hotdog","peanut butter","release","cantata","violin","viola","cello","bass","tenor","alto","soprano"];
+w.noun.plural = ["all","excursions","armies","opinions","wars","battles","swords","people","countries","eggs","desks","generals","earplugs","lamps","puzzles","rivers","cards","valleys","problems","bugs"];
+
+w.verb.transitive = ["fail","follow","believe","allow","lower","defeat","conquer","overcome", "see", "consume","understand", "compile","learn","collect","possess","crack","swing","practice", "make", "add", "vanquish", "meet", "address", "polish", "kill", "pay", "curb", "help", "paint","color","probe","greet","cover","punch","appropriate","burn","assist","fly","bring","peruse","lose","contact","break","operate","include","try","transport","escort","pop", "prick" ];
+w.verb.intransitive = ["swim", "go", "work","rise", "agree","protest", "disagree","flee","lose","win","boast","cry","walk","thunder","meditate","think","surrender","forget","rejoice" ];
+w.verb.being = { present: {thirdperson:{ singular:"is", plural:"are" } }, past: {thirdperson: { singular:"was", plural:"were" } } };
+
+
+w.verb.special = {}, w.noun.special = {};
+w.verb.special.say = [ "say","declare", "state", "announce", "remark", "observe", "mention", "comment", "note","reply","respond","answer","rejoin" ];
+w.verb.special.response = [ "agree","concur","refuse","decline", "turn down", "reject", "spurn", "rebuff", "dismiss" ];
+
+w.noun.special.clothingMale = [ "shirt","pair of pants", "suit", "suitcoat", "jacket","coat", "shoes", "boots" ];
+w.noun.special.clothingFemale = [ "dress","blouse", "skirt", "jacket", "coat", "shoes", "slippers" ];
+w.noun.special.thought = [ "thought","idea", "notion", "opinion", "view", "impression", "feeling", "theory", "judgment", "assessment", "conclusion", "wish",
+"hope", "aspiration", "ambition", "dream", "intention", "plan", "design", "aim","desire", "longing", "yearning", "inclination", "urge", "whim", "craving", "hunger", "hope", "aspiration", 
+"ambition", "dream", "hankering", "yen", "itch" ];
+w.noun.special.tu = [ "second","millisecond", "minute", "hour", "day", "week", "fortnight","month","year","season","decade","century","millenium","age" ];
+w.noun.special.vessel = [ "cup","bowl", "plate", "glass", "platter", "pot", "pan","salver","vessel","crock" ];
+w.noun.special.event = [ "parade","battle","war","campaign","baseball game","concert","conference","football game","journey","excursion","competition","show","production","presentation","speech" ];
+w.noun.special.remark = [ "my goodness","my word", "goodness", "really", "well", "my goodness gracious", "what on earth","what in the world","oh dear","dear me","alack","alas","oh no","ow" ];
+w.noun.special.hplace = [ "bedroom","Study", "bathroom", "dining room", "basement", "upstairs bedroom", "downstairs bedroom","closet","kitchen" ];
+w.noun.special.relation = [ "cousin","brother", "father", "mother", "uncle", "aunt", "nephew", "niece","son","daughter","grandson","granddaughter","grandfather","grandmother","wife","husband" ];
+w.noun.special.emotions = [ "joy","delight", "great pleasure", "joyfulness", "jubilation", "triumph", "exultation", "rejoicing", "happiness", "gladness", "glee", "exhilaration", 
+"exuberance", "elation", "euphoria", "bliss", "ecstasy", "rapture", "enjoyment", "felicity", "joie de vivre", "jouissance", "jocundity", "misery", "unhappiness", "distress", 
+"wretchedness", "suffering", "anguish", "anxiety", "angst", "torment", "pain", "grief", "heartache", "heartbreak", "despair", "despondency", "dejection", "depression", "desolation", 
+"gloom", "melancholy", "melancholia", "woe", "sadness", "sorrow" ];
+w.noun.special.sickness = [ "malaria","flu","cancer","melanoma","rheumatism","gout","arthritis","smallpox","heart attack","appendicitis", "Addison's disease", 
+"maple syrup urine disease","failure to thrive syndrome","fetal alcohol spectrum disorder","preeclampsia","attaraxia","typhoid fever","rabbit fever","Cushing's syndrome","epilepsy",
+"dyspareunia","dyspepsia","diabetes insipidus","chronic obstructive pulmonary disease","emphysema","leukocytopenia","measles","mumps","rubella","chicken pox","bacillary dysentery" ];
+w.noun.special.food = [ "gum","hotdog","pickle","radish","lobster","hamburger","casserole","spaghetti","cheese","cake","pie","banana","strawberry","pepper","salt","garlic","pizza","bread","sausage","ham","egg","alphabet soup","soup","fudge","broccoli","rhubarb" ];
+w.noun.special.facial = [ "mouth","temple","eye","chin","nose","ear","nostril","eyebrow","neck","lip","cheek","forehead","eyelash","beard","moustache" ];
+w.noun.special.body = [ "back","side","arm","leg","foot","head","toe","finger","stomach","chest","thigh","hip","hand" ];
+w.noun.special.furniture = [ "chair","table","bed","sofa","couch","stool","desk","bench","bookcase","coffee table","cot","bunk bed"];
+w.noun.special.places = ["France","England","America","Europe","Africa","South Carolina","North Carolina","Texas","California","Michigan","Idaho","London","Paris","South Dakota","North Dakota","Alabama","Arkansas","Wyoming","New Hampshire","New York","Kentucky","Vermont","Kansas","Kansas City","Los Angeles","the Philippines","Connecticut","Illinois","Ohio","Georgia","Tennessee","Louisiana","Washington","Washington, D.C.","Bermuda","the Caribbean Isle","Nebraska","Maryland","Rhode Island","Hawaii","Alaska","Colorado"];
+w.noun.special.jobs = ["health care professional","doctor","nurse","actuary","chef","landscaper","teacher","professor","locksmith","author","writer","automotive worker","musician","highschool principal","janitor","clerk","lawyer","secretary","security guard","sailor","police officer","soldier"];
+w.noun.special.colors = ["red","blue","yellow","orange","green","black","white","tan","brown","gray","purple","pink","turquoise"]
+w.noun.special.animals = ["grasshopper","camel","shark","squid","Tyranosaur","cricket","llama","anteater","okapi","dikdik","rat","oyster","fungus","aardvark","Saccharomyces cerevisae",
+"dog","fish","cow","horse","dinosaur","chicken","bug","insect","tarantula","weevil","bird","kangaroo","wallaby","rhinoceros","hippopotamus","cat","monkey","gorilla","snake","lamb",
+"rabbit","guinea pig","lion","mouse","duck","goose","turtle","tortoise","alligator","crocodile","baboon","kiwi bird","newt","marmoset","pelican","beetle","<i>Dicytostelium discoideum</i>","coati mundi",
+"mongoose","wombat","platypus","octopus","seagull","skink","skunk","mink","fly","lynx","gnat","mosquito","bee","<i>Caenorhabditis elegans</i>","moth","butterfly","sheep","Homo sapiens","viper",
+"vulture","coral snake","colly","Great Dane","golden retriever","<i>Drosophila melanogaster</i>"];
+w.noun.special.money = ["dollar","cent","money","cash","quarter","dime","nickel","check"]
+w.noun.special.weapon = ["gun","pistol","machine gun","lance","sword","shield","rifle","bomb","club","mace","spear","Taser","cannon","laser gun"];
+
+w.adjective = { article:{}, normal:{}, special:{} };
+w.adjective.article.def = "the";
+w.adjective.article.indef = ["a"];
+w.adjective.normal = ["different","high","outlying","fast","slow","big","small","well-known","light","heavy","first","last","lesser","wonderful","good","bad","interesting","fine","cool","hot","cold","low","high","powerful","weak","strong","loud","soft","careful","daring","pleasant","weird","boring","valuable","precious","common","rare","gritty","dirty","level","flowing","purple","white","concerning","important","unnecessary"];
+
+w.adjective.special.description = ["trustworthy","reliable", "dependable", "honest", "honorable", "upright", "principled", "true", "truthful", "ethical", "virtuous", "incorruptible", "unimpeachable", "responsible", 
+"sensible", "levelheaded", "loyal", "faithful", "staunch", "steadfast", "trusty", "sound", "reputable", "discreet",
+"funny","suspicious", "suspect", "dubious", "untrustworthy", "questionable",
+"industrious", "hard-working", "diligent", "assiduous", "conscientious", "steady", "painstaking", "sedulous", "persevering", "unflagging", "untiring", "tireless", 
+"indefatigable", "studious", "busy", "active", "bustling", "vigorous", "determined", "dynamic", "zealous", "productive",
+"lazy","idle", "indolent", "slothful", "work-shy", "shiftless", "inactive", "underactive", "sluggish", "lethargic", "remiss", "negligent", "slack", "lax", "lackadaisical",
+"earnest","serious", "solemn", "grave", "sober", "humorless", "staid", "intense", "committed", "dedicated", "keen", "diligent", "zealous", "thoughtful", "cerebral", "deep", "profound", "frivolous",
+"apathetic","uninterested", "indifferent", "unconcerned", "unmoved", "uninvolved", "disinterested", "unemotional", "emotionless", "dispassionate", "lukewarm", "unmotivated", "halfhearted",
+"tall","thin","bald","bearded","quiet","energetic","active", "lively", "dynamic", "zestful", "spirited", "animated", "vibrant", "bouncy", "bubbly", "exuberant", "ebullient", "perky", "frisky", "sprightly", "tireless", "indefatigable", "enthusiastic",
+"sluggish", "inert", "inactive", "underactive", "slow", "torpid", "lifeless", "languid", "listless", "lazy", "idle", "indolent", "shiftless", "slothful", "apathetic", "weary", "tired", "fatigued",
+"big", "large", "huge", "towering", "colossal", "gigantic", "giant", "monstrous", "small", "little", "petite", "tiny", "diminutive", "stubby", "elfin", "dwarfish", "midget", "pygmy", "Lilliputian", "minuscule", "miniature",
+"unintelligent", "ignorant", "dense", "foolish", "dull-witted", "slow", "simpleminded", "vacuous", "vapid", "idiotic", "imbecilic", "imbecile", "obtuse", "doltish",
+"clever", "bright", "intelligent", "sharp-witted", "quick-witted", "shrewd", "astute", "able", "perceptive", "percipient", "well dressed", "stylish", "chic", "fashionable", "modish", "elegant", "neat", "spruce", "trim", "dapper",
+"athletic","smart","muscular", "muscly", "sturdy", "strapping", "well built", "strong", "powerful", "robust", "able-bodied", "vigorous", "hardy", "lusty", "hearty", "brawny", "burly", "heavily built", "broad-shouldered", "Herculean",
+"undersized", "undernourished", "underfed", "stunted", "slight", "small", "little", "weak", "feeble", "sickly", "delicate", "frail", "fragile"];
+
+w.adverb = ["poorly", "incompetently", "ineptly", "inexpertly", "inefficiently", "imperfectly", "deficiently", "defectively", "unsatisfactorily", "inadequately", "incorrectly", 
+"faultily", "shoddily", "amateurishly", "carelessly", "negligently", "abominably", "crummily", "pitifully", "woefully",
+"always","quickly","very well","not","excellently","poorly","spasmodically","thoroughly","badly","justly","rarely","carefully","indescribably","candidly","pompously",
+"brashly","courageously","angrily","happily","blackly","sadly", "tidily", "methodically", "systematically", "smartly", "sprucely",
+"cleverly", "aptly", "elegantly", "skillfully", "deftly", "adroitly", "adeptly", "expertly","comically"];
+
+w.advs = {};
+w.advs.time = [ "today","yesterday","tomorrow","a minute ago","in a fortnight","in a few weeks","last year","next year","meanwhile","now","then","at that time","previously","before now","later","eventually","sometimes" ];
+
+w.pronoun = ["he","she","it"];
+
+w.preposition = ["in","under","above","by","with","above","away from"];
+
+w.phrase = {};
+w.phrase.intro = ["for example,","it wasn't long before this that","and after that","although this is a common error,","but who could guess that", "it is often said that","there is in every man's life a time when","wonderful, wonderful though it seem, yet let us remember that","according to one author,","studies say","and with this curt remark,","do not forget that","recall that","after all,","it is undeniable that","well,","the wellbeing of an entire nation depends on whether","I freely acknowledge that","curious, curious the twists of fate! but", "thus,","therefore,","consequently,","finally,","while my sister has often claimed this, actually","this is simply not so, because","it is not true that", "it is true that","it is commonly acknowledged that","but he, the darling of the establishment, freely admitted that","politically speaking,","the foregoing is in stark contrast to the brutal fact that","and who can deny that","in 1993,","on my birthday,","last year,","once,","i don't understand the common claim that","but don't lose sight of the big picture:","in other words,","note that","in Spain,","in foreign countries","in layman's terms,","in rather technical terms,","to be precise,","and that is precisely why","in 2015, it will be common knowledge that","the ancients firmly believed that","no educated person -- except perhaps the intelligent reader -- could possibly disagree with this conclusion:","in conclusion","first,","also,","but","sometimes","in some places,"];
+w.phrase.statement = ["No one believes this.","Such are the amusing quirks of fate.","One's life -- like melting butter -- is subject to rapid (but not altogether undesirable) change.","I emphasize the preceding.","Perhaps I can relate the foregoing to personal experience.","I once had a friend who believed this quite sincerely, but he is dead now.", "Quite frankly, I cannot help but laugh at this viewpoint.","As one wise man said, \"If you were really smart, you wouldn't need to go to school; and if you aren't, it isn't any use.\"","All of this goes to show something quite astounding.","Remember, quantity does not equal quality.","Period.","Thus, the door to knowledge is usually just too narrow for you to squeeze through.","Twain, probably with this in mind, said \"the report of my death has been grossly exaggerated.\"","It's common sense.","No, I'm not crazy.","(Much of the research presented in this paper is original.)", "If I could state my point more directly, I would -- but it's simply too complex.","Now here's my point.","Perhaps an analogy would help.","Trust me, I've done plenty of research to support this conclusion."]
+
+w.conjunction = ["and","but","or","yet"];
+
+w.num = ["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+w.one = "one";
+
+w.firstNameMale = ["Noah","Liam","Mason","Michael","Alexander","Robert","Richard","Charles","James","Luke","Paul","Logan","Lucas","Aiden","Jackson","Jack","Jeremiah","Joshua",
+"Josiah","Eric","Benjamin","Tom","Jim","Sam","William","Bill","Joe","Steve","Greg","David","John","Kyle","Leonard","Jacob","Ethan","Daniel","Kevin","Jeremy","Isaac",
+"Abraham","Jeb","Fred","Mark","Dan","Duane","Bob","Ray"];
+w.firstNameFemale = ["Victoria","Patricia","Alice","Mia","Catherine","Caroline","Arielle","Linda","Barbara","Jennifer","Maria","Susan","Margaret","Dorothy","Emma","Esther",
+"Sophia","Leah","Rachel","Chaya","Miriam","Ava","Chana","Madison","Chloe","Olivia","Taylor","Kayla","Serenity","Brielle","Jill","Sara","Madeline","Jocelyn","Elizabeth","Julia",
+"Marianne","Ruth","Karis","Edna","Georgia","Phyliss","Marilyn","Annette","Della","Joanne","Shirley","Jeanna","Priscilla","Bonny","Rose","Grace","Charity","Dinah","Julie"];
+w.lastName = ["Minnick","Tipton","Nance","Davis","Eastergaard","Vincent","Wartak","Brazeal","Boyd","Cummings","Longfellow","Marte","Willis","Rush","Wilkie","Cluney","Schaedel","Ramsey",
+"Townes","Reagan","Clinton","Washington","Wallis","Burns","Frost","Priest","Dahlhausen","Collins","Grant","Barnett","Labadorf","Bott","Sterr","Snow","Houtz","Greer","Morris","Tompkins",
+"Lovegrove","Pettit","Corey","Frederick","Lee","Pound","Harmon","D'Amico","D'Autremont","Obermeier","Riersy","Clotier","Bishop","Green","Ward","Doyle","McDonald","Arnold","Hamilton",
+"Archer","Bailey","Baker","Brewer","Butcher","Carter","Chandler","Clark","Collier","Cooper","Cook","Carpenter","Dempster","Dyer","Farmer","Faulkner","Fisher","Fletcher",
+"Fowler","Fuller","Gardener","Glover","Haywood","Hawkins","Head","Hunt","Hunter","Judge","Knight","Miller","Mason","Page","Palmer","Parker","Porter","Potter","Sawyer","Slater","Smith",
+"Stringer","Taylor","Thatcher","Turner","Walker","Weaver","Woodman","Wright","Short","Brown","Black","Whitehead","Young","Long","White","Bridge","Camp","Hill","Bush","Lake","Lee","Wood",
+"Grove","Holmes","Forest","Underwood","Hall","Brooks","Fields","Stone","Morley","Moore","Perry","Burton","Hamilton","London","Leighton","Murray","Sutton","Flint","Laughton","Ernle",
+"Windsor","Staunton","Richardson", "Stephenson", "Jones", "Williams", "Jackson", "Wilson", "Thompson", "Benson", "Johnson", "Harris", "Evans", "Simpson", "Willis", "Fox", "Davies", 
+"Reynold", "Adams", "Dawson", "Lewis", "Rogers", "Murphy", "Morrow", "Nicholson", "Robinson", "Powell", "Ferguson", "Davis", "Edwards", "Hudson", "Roberts", "Harrison", "Watson", 
+"Molson", "Madison", "Emmott", "Marriott", "MacDonald", "Forbes", "Henderson", "Armstrong", "Grant", "Cameron", "Stewart", "Douglas", "Crawford", "Campbell","Hickman","Kilpatrick",
+"Kilbride"];
+w.titleMale = ["Mr.","Mr.","Mr.","Mr.","Mr.","Dr.","Dr.","Sir"];
+w.titleFemale = ["Mrs.","Mrs.","Miss","Ms."];
+
+
+function assemble ( template ) {
+
+if ( !template ) {
+
+var type = RAND( 0, sentence_template.length - 1);
+template = sentence_template[ type ];
+
+}
+
+template=template.split(",");
+
+var Sentence = "";
+
+for ( var i=0; i<template.length; i++ ) {
+	
+	Sentence += subassemble( template[i] );
+	if ( template[i+1] != "PERIOD" && template[i+1] != "COMMA" && template[i+1] != "EXC" && template[i+1] != "RQ" && template[i] != "LQ" ) Sentence += " ";
+
+}
+
+var m = Sentence.substr(0,1);
+m = m.toUpperCase();
+
+Sentence = " "+ m + Sentence.substr(1,Sentence.length-1);
+
+
+return Sentence;
+
+}
+
+function subassemble ( key ) {
+
+key = key.split(".");
+
+var ret = key[0];
+
+if ( key[0] == "BR" ) ret = "<P>";
+
+if ( key[0] == "DEF_ART" ) ret = w.adjective.article.def;
+
+else if ( key[0] == "INDEF_ART" ) {
+
+ //ret = w.adjective.article.indef[( RAND( 0, w.adjective.article.indef.length - 1 )) ]; 
+s.indef_art.queue = true;
+if ( key.indexOf("cap") > 0 ) s.indef_art.cap = true;
+return "";
+
+} 
+
+else if ( key[0] == "PRO" ) ret = w.pronoun[ RAND( 0, w.pronoun.length - 1) ];
+
+else if ( key[0] == "SING_NOUN" ) {
+
+if ( key.indexOf("new") > 0 && key.indexOf("major") > 0 ) ret =  w.noun.singular[ (RAND( 0, w.noun.singular.length - 1 )) ];
+else {
+if ( key.indexOf("prev") > 0 && !(key.indexOf("major") > 0) && s.queue.nouns.all.length ) ret = s.queue.nouns.all[s.queue.nouns.all - 1];
+else if ( key.indexOf("major") > 0 && key.indexOf("prev") > 0 && s.queue.nouns.majorSing.length ) ret = s.queue.nouns.majorSing[ s.queue.nouns.majorSing.length - 1];
+else if ( key.indexOf("major") > 0 && s.queue.nouns.majorSing.length ) ret = s.queue.nouns.majorSing[ (RAND( 0, s.queue.nouns.majorSing.length - 1 ))];
+else ret =  w.noun.singular[ (RAND( 0, w.noun.singular.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+}
+
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "CLOTHING" && key[1] == "male" ) {
+
+ret =  w.noun.special.clothingMale[ (RAND( 0, w.noun.special.clothingMale.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "CLOTHING" && key[1] == "female" ) {
+
+ret =  w.noun.special.clothingFemale[ (RAND( 0, w.noun.special.clothingFemale.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "SICK" ) {
+
+ret =  w.noun.special.sickness[ (RAND( 0, w.noun.special.sickness.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "HPLACE" ) {
+
+ret =  w.noun.special.hplace[ (RAND( 0, w.noun.special.hplace.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "MONEY" ) {
+
+ret =  w.noun.special.money[ (RAND( 0, w.noun.special.money.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "TU" ) {
+
+ret =  w.noun.special.tu[ (RAND( 0, w.noun.special.tu.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "REMARK" ) {
+
+ret =  w.noun.special.remark[ (RAND( 0, w.noun.special.remark.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "EVENT" ) {
+
+ret =  w.noun.special.event[ (RAND( 0, w.noun.special.event.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "RELATION" ) {
+
+ret =  w.noun.special.relation[ (RAND( 0, w.noun.special.relation.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "JOB" ) {
+
+ret =  w.noun.special.jobs[ (RAND( 0, w.noun.special.jobs.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "FOOD" ) {
+
+ret =  w.noun.special.food[ (RAND( 0, w.noun.special.food.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "WEAPON" ) {
+
+ret =  w.noun.special.weapon[ (RAND( 0, w.noun.special.weapon.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "THOUGHT" ) {
+
+ret =  w.noun.special.thought[ (RAND( 0, w.noun.special.thought.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "VESSEL" ) {
+
+ret =  w.noun.special.vessel[ (RAND( 0, w.noun.special.vessel.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "FURNITURE" ) {
+
+ret =  w.noun.special.furniture[ (RAND( 0, w.noun.special.furniture.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "COLOR" ) {
+
+ret =  w.noun.special.colors[ (RAND( 0, w.noun.special.colors.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "FACIAL" ) {
+
+ret =  w.noun.special.facial[ (RAND( 0, w.noun.special.facial.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "BODY" ) {
+
+ret =  w.noun.special.body[ (RAND( 0, w.noun.special.body.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "ANIMAL" ) {
+
+ret =  w.noun.special.animals[ (RAND( 0, w.noun.special.animals.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+
+else if ( key[0] == "EMOTION" ) {
+
+ret =  w.noun.special.emotions[ (RAND( 0, w.noun.special.emotions.length - 1 )) ];
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorSing.push( ret );
+
+}
+
+else if ( key[0] == "PLUR_NOUN" ) {
+
+if ( key.indexOf("new") > 0 && key.indexOf("major") > 0 ) ret =  w.noun.plural[ (RAND( 0, w.noun.plural.length - 1 )) ];
+else {
+if ( key.indexOf("prev") > 0 && !(key.indexOf("major") > 0) && s.queue.nouns.all.length ) ret = s.queue.nouns.all[s.queue.nouns.all - 1];
+else if ( key.indexOf("major") > 0 && key.indexOf("prev") > 0 && s.queue.nouns.majorPlur.length ) ret = s.queue.nouns.majorPlur[ s.queue.nouns.majorPlur.length - 1];
+else if ( key.indexOf("major") > 0 && s.queue.nouns.majorPlur.length ) ret = s.queue.nouns.majorPlur[ (RAND( 0, s.queue.nouns.majorPlur.length - 1 ))];
+else ret =  w.noun.plural[ (RAND( 0, w.noun.plural.length - 1 )) ];
+}
+s.queue.nouns.all.push(ret);
+if ( key.indexOf("major") > 0 ) s.queue.nouns.majorPlur.push( ret );
+
+}
+
+else if ( key[0] == "PLACE" ) {
+
+ret =  w.noun.special.places[ (RAND( 0, w.noun.special.places.length - 1 )) ];
+s.queue.places.push(ret);
+
+}
+
+else if ( key[0] == "TRANS_VERB" ) {
+
+if ( key.indexOf("prev") > 0 ) ret = s.queue.transVerb[ s.queue.transVerb.length -1];
+else ret =  w.verb.transitive[ (RAND( 0, w.verb.transitive.length - 1 )) ];
+s.queue.verbs.push(ret);
+s.queue.transVerb.push(ret);
+
+}
+
+else if ( key[0] == "INTRANS_VERB" ) {
+
+if ( key.indexOf("prev") > 0 ) ret = s.queue.intransVerb[ s.queue.intransVerb.length -1];
+else ret =  w.verb.intransitive[ (RAND( 0, w.verb.intransitive.length - 1 )) ];
+
+s.queue.verbs.push(ret);
+s.queue.intransVerb.push(ret);
+
+}
+
+
+else if ( key[0] == "INTRO" ) ret =  w.phrase.intro[ (RAND( 0, w.phrase.intro.length - 1 )) ];
+
+else if ( key[0] == "STATEMENT" ) ret =  w.phrase.statement[ (RAND( 0, w.phrase.statement.length - 1 )) ];
+
+else if ( key[0] == "ADJECTIVE" ) {
+
+if ( key.indexOf("prev")>0 ) ret = s.queue.adjectives[ s.queue.adjectives.length - 1 ];
+else ret =  w.adjective.normal[ (RAND( 0, w.adjective.normal.length - 1 )) ];
+
+s.queue.adjectives.push( ret );
+
+}
+
+else if ( key[0] == "DESC" ) {
+
+
+if ( key.indexOf("prev")>0 ) ret = s.queue.adjectives[ s.queue.adjectives.length - 1 ];
+else ret =  w.adjective.special.description[ (RAND( 0, w.adjective.special.description.length - 1 )) ];
+
+s.queue.adjectives.push( ret );
+
+}
+
+else if ( key[0] == "CONJ" ) ret =  w.conjunction[ (RAND( 0, w.conjunction.length - 1 )) ];
+
+else if ( key[0] == "SAY" ) ret =  w.verb.special.say [ (RAND( 0, w.verb.special.say.length - 1 )) ];
+else if ( key[0] == "RESPONSE" ) ret =  w.verb.special.response [ (RAND( 0, w.verb.special.response.length - 1 )) ];
+
+else if ( key[0] == "ADVERB" ) ret =  w.adverb[ (RAND( 0, w.adverb.length - 1 )) ];
+else if ( key[0] == "TIME" ) ret =  w.advs.time[ (RAND( 0, w.advs.time.length - 1 )) ];
+
+else if ( key[0] == "PREP" ) ret =  w.preposition[ (RAND( 0, w.preposition.length - 1 ) )];
+
+else if ( key[0] == "IS" ) ret =  w.verb.being.present.thirdperson.singular;
+
+else if ( key[0] == "ARE" ) ret =  w.verb.being.present.thirdperson.plural;
+
+else if ( key[0] == "WAS" ) ret =  w.verb.being.past.thirdperson.singular;
+
+else if ( key[0] == "WERE" ) ret =  w.verb.being.past.thirdperson.plural;
+
+else if ( key[0] == "NUM" ) ret =  w.num[ (RAND( 0, w.num.length - 1 ) )];
+
+else if ( key[0] == "QUOTE" ) ret = '"';
+else if ( key[0] == "LQ" ) ret = '"'; // todo: update
+else if ( key[0] == "RQ" ) ret = '"'; // todo: update
+
+else if ( key[0] == "COMMA" || key[0] == "COM" || key[0] == "CM" ) ret =  ",";
+else if ( key[0] == "PERIOD" || key[0] == "PER" || key[0] == "DOT" ) ret =  ".";
+else if ( key[0] == "EXCLAMATION" || key[0] == "EXC" || key[0] == "EP" ) ret =  "!";
+else if ( key[0] == "QUESTION" || key[0] == "QUE" || key[0] == "QM" ) ret =  "?";
+
+else if (key[0] == "TOPIC" ) ret =  TOPIC[( RAND( 0, TOPIC.length - 1 )) ]
+
+else if (key[0] == "ACT" ) ret =  ACT[( RAND( 0, ACT.length - 1 )) ];
+
+else if ( key[0] == "CHAR" ) {
+
+var num  = key[1] * 1;
+
+if ( key[1] > -1 ) {
+
+if ( key.indexOf("full") > 1 )
+ret = s.characters[ num ].fullName;
+else if ( key.indexOf("address") > 1 )
+ret = s.characters[ num ].address;
+else if ( key.indexOf("first") > 1 )
+ret = s.characters[ num ].firstName;
+else if ( key.indexOf("last") > 1 )
+ret = s.characters[ num ].lastName;
+else if ( key.indexOf("pro") > 1 )
+ret = s.characters[ num ].pronoun;
+else if ( key.indexOf("mw") > 1 )
+ret = s.characters[ num ].mw;
+else if ( key.indexOf("bg") > 1 )
+ret = s.characters[ num ].bg;
+else if ( key.indexOf("acc") > 1 )
+ret = s.characters[ num ].accusativePronoun;
+else if ( key.indexOf("age") > 1 )
+ret = s.characters[ num ].age;
+else ret = s.characters[ num ].name;
+
+s.characters[num].used = true;
+s.queue.characters.push( s.characters[num] );
+
+}
+else {
+
+if ( key.indexOf("prev") > 0 && s.queue.characters.length ) var c = s.queue.characters[ s.queue.characters.length-1 ];
+else var c = s.characters[ RAND(0, s.characters.length -1 ) ];
+
+if ( key.indexOf("full") > 0 )
+ret = c.fullName;
+else if ( key.indexOf("address") > 0 )
+ret = c.address;
+else if ( key.indexOf("first") > 0 )
+ret = c.firstName;
+else if ( key.indexOf("last") > 0 )
+ret = c.lastName;
+else if ( key.indexOf("pro") > 0 )
+ret = c.pronoun;
+else if ( key.indexOf("mw") > 0 )
+ret = c.mw;
+else if ( key.indexOf("bg") > 0 )
+ret = c.bg;
+else if ( key.indexOf("acc") > 0 )
+ret = c.accusativePronoun;
+else if ( key.indexOf("age") > 0 )
+ret = c.age;
+else ret = c.name;
+
+c.used = true;
+s.queue.characters.push( c );
+
+}
+}
+
+if (key.indexOf("present") > 0) ret = w.verb_3ps(ret);
+else if (key.indexOf("past") > 0) ret = w.verb_p3ps(ret);
+else if (key.indexOf("gerund") > 0) ret = w.verb_g(ret);
+
+if (key.indexOf("sup") > 0) ret = w.adj_sup(ret);
+if (key.indexOf("comp") > 0) ret = w.adj_comp(ret);
+if (key.indexOf("poss") > 0) ret = w.noun_poss(ret);
+if (key.indexOf("cap") > 0) ret = cap( ret );
+if (key.indexOf("plur") > 0) ret = w.noun_plur( ret );
+if (key.indexOf("self") > 0) ret += "self";
+
+if ( s.indef_art.queue ) {
+
+var art = "a ";
+if ( "aehiouy".indexOf(ret[0]) > -1 ) art = "an ";
+
+if ( s.indef_art.cap ) art = cap (art);
+
+s.indef_art.queue = false;
+s.indef_art.cap = false;
+
+ret = art + ret;
+
+}
+
+
+
+return ret;
+
+}
+
+// Word manipulation functions
+w.noun_poss = function ( noun ) {
+
+if ( noun == "he" ) return "his";
+if ( noun == "she" ) return "her";
+if ( noun == "it" ) return "its";
+
+return noun + "'s";
+
+}
+
+w.noun_plur = function ( noun ) {
+
+var a = noun.substr( (noun.length - 1), 1 );
+var b = noun.substr( 0, noun.length - 1 );
+
+if ( a == "f" ) return b+"ves";
+
+else if ( "xchzjso".indexOf(a) > -1 ) return noun+"es";
+
+else return noun+"s";
+
+}
+
+w.adj_sup = function ( adj ) {
+
+if ( adj.length > 5 ) return "most " + adj;
+
+return adj + "est";
+
+}
+
+w.adj_comp = function ( adj ) {
+
+if ( adj.length > 5 ) return "more " + adj;
+
+return adj + "er";
+
+}
+
+w.verb_3ps = function ( verb ) {
+
+var a = verb.substr( (verb.length - 1), 1 );
+var b = verb.substr( 0, verb.length - 1 );
+
+if ( a == "y" ) return b+"ies";
+
+if ( a == "f" ) return b+"ves";
+
+else if ( "xchzjso".indexOf(a) > -1 ) return verb+"es";
+
+else return verb+"s";
+
+}
+
+w.verb_g = function ( verb ) {
+
+var a = verb.substr( (verb.length - 1), 1 );
+var c = verb.substr( (verb.length - 2), 1 );
+var b = verb.substr( 0, verb.length - 1 );
+
+if ( a == "e" && c != "e" ) return b + "ing";
+if ( a == "p" ) return b + "pping";
+if ( a == "n" ) return b + "nning";
+if ( a == "m" ) return b + "mming";
+if ( a == "l" ) return b + "lling";
+
+return verb+"ing";
+
+}
+
+w.verb_p3ps = function ( verb ) {
+
+var all = verb.split(" "),ret="";
+verb = all[0];
+
+var a = verb.substr( (verb.length - 1), 1 );
+var b = verb.substr( 0, verb.length - 1 );
+
+// Irregular verbs
+if (verb == "come") ret = "came";
+else if (verb == "is") ret =  "was";
+else if (verb == "flee") ret =  "fled";
+else if (verb == "go") ret =  "went";
+else if (verb == "eat") ret =  "ate";
+else if (verb == "understand") ret =  "understood";
+else if (verb == "become") ret =  "became";
+else if (verb == "bring") ret =  "brought";
+else if (verb == "say") ret =  "said";
+else if (verb == "eat") ret =  "ate";
+else if (verb == "drink") ret =  "drank";
+else if (verb == "come") ret =  "came";
+else if (verb == "lose") ret =  "lost";
+else if (verb == "make") ret =  "made";
+else if (verb == "give") ret =  "gave";
+else if (verb == "swim") ret =  "swam";
+else if (verb == "win") ret =  "won";
+else if (verb == "break") ret =  "broke";
+else if (verb == "say") ret =  "said";
+else if (verb == "take") ret =  "took";
+else if (verb == "see") ret =  "saw";
+else if (verb == "pop") ret =  "popped";
+else if (verb == "meet") ret =  "met";
+else if (verb == "see") ret =  "saw";
+else if (verb == "fly") ret =  "flew";
+else if (verb == "think") ret =  "thought";
+else if (verb == "pay") ret =  "paid";
+else if (verb == "swing") ret =  "swung";
+else if (verb == "forget") ret =  "forgot";
+else if (verb == "swing") ret =  "swung";
+else if (verb == "rise") ret =  "rose";
+
+if ( a == "e" ) ret =  b+"ed";
+if ( a == "y" ) ret =  b+"ied";
+
+else ret = verb+"ed";
+
+all[0] = ret;
+ret = all.join(" ");
+return(ret);
+
+}
+
+w.adj_adv = function ( adjective ) {
+
+var a = adjective.substr( (adjective.length - 1), 1 );
+var b = adjective.substr( 0, adjective.length - 1 );
+ return adjective+"ly";
+
+}
+
+function cap( str ) {
+
+var m = str.substr(0,1);
+m = m.toUpperCase();
+
+str = m + str.substr(1,str.length-1);
+
+return str;
+
+}
+
+function com( num ) {
+num = "" + num;
+ret = "";
+for ( var i=0; i<num.length; i++ ) {
+ret += num[i];
+if ((num.length-(i+1))/3 == Math.floor((num.length-(i+1))/3) && i!=num.length-1)
+	ret += ",";
+
+}
+
+return ret;
+
+}
+
+var TOPIC = [];
+var ACT = [];
+
+function setTopic(t,a) {
+
+TOPIC = [], ACT = [];
+
+for ( var i=0; i<t; i++ )
+	TOPIC.push(subassemble("SING_NOUN"));
+
+for ( var j=0; j<a; j++ )
+	ACT.push(subassemble("TRANS_VERB"));
+
+
+}
+
+function setCharacters( num ) {
+
+s.characters = [];
+
+for ( var i=0; i<num; i++ )
+	s.characters.push( new Character() );
+
+}
+
+function title () {
+
+var title = description(),ret ="";
+title = title.split(" ");
+var words = RAND(6,8);
+for ( var i=0; i<words; i++ )
+ ret += cap(title[i])+" ";
+
+return ret;
+}
+
+function description() {
+
+var template = description_template[ RAND(0, description_template.length-1) ];
+var text = "";
+for ( var i=0; i<template.length; i++ )
+	text += assemble( template[i] );
+	
+return text;
+
+}
+
+function dialog() {
+
+var template = dialog_template[ RAND(0, dialog_template.length-1) ];
+var text = "";
+for ( var i=0; i<template.length; i++ )
+	text += assemble( template[i] );
+	
+return text;
+
+}
+
+function action() {
+
+var template = action_template[ RAND(0, action_template.length-1) ];
+var text = "";
+for ( var i=0; i<template.length; i++ )
+	text += assemble( template[i] );
+	
+return text;
+
+}
+
+function express ( num ) {
+
+setTopic( 2, 3 );
+
+setCharacters( 7 );
+
+if(num) {
+
+var a = "<h1>" + title() + "</h1>";
+
+var sub = a.split(" ").length;
+
+for ( var i=0; i<num; i++ ) {
+
+var which = RAND(0,15)
+if (which >= 0 && which <6 )
+	a += dialog();
+else if (which >5 && which<10)
+	a += description();
+else if (which >9 && which<14)
+	a += action();
+else if (which == 15)
+	a += assemble();
+	
+}
+
+a = a.split("  ");
+a = a.join(" ");	
+s.words = a.split(" ").length  - sub;
+
+$("#words").html(com(s.words));	
+$("#main").html(a);
+
+}
+
+}
+
+function _try () {
+
+var code = $("#code_editor").val();
+
+$("#main").html( assemble(code) ); 
+
+}
+
+$("document").ready(function(){
+
+$("#code_editor").focus();
+express(0);
+//M();
+
+$("body").hover( function() {
+
+M.act = new Date()*1;
+
+});
+
+});
+
+/*function M() {
+
+if ( !localStorage.day ) {
+	localStorage.day = new Date().getDate();
+	localStorage.used = 0;
+}
+
+if (new Date().getDate() != localStorage.day ) {
+
+localStorage.day = new Date().getDate();
+localStorage.used = 0;
+}
+
+M.log();
+
+}
+
+M.time = 0; //sec
+M.act = new Date()*1;
+M.grace = 6000000; //ms
+
+M.log = function() {
+
+if (localStorage.used > M.time )
+$("body").html("Time up for today (don't want this to be addictive)."). 
+
+if ( new Date()*1 - M.act < M.grace )
+	localStorage.used = localStorage.used*1 + 1;
+
+setTimeout( "M.log()", 1000);
+
+}*/
+
+</script>
+
+<style type="text/css" >
+
+body { margin:0px; }
+
+button { margin:20px; border-radius:3px; background:white; border:1px solid #ccc; padding:8px;}
+button:hover { background:#eee; }
+
+#main { border:0px solid black; padding:12px; margin-left:auto; margin-right:auto; width:700px; line-height:25px; font-family:calibri;}
+
+#code_editor { width:100%; height:50px; font-size:30px; border:0;padding:10px;border-bottom:1px dashed gray; }
+#code_editor:focus { outline:0; }
+
+</style>
+
+</head>
+
+<body>
+
+Words in this story: <span id='words' >0</span>
+<button onclick="express(12)" >Write a story</button>
+
+<form action='javascript:_try()' >
+<input id='code_editor' onkeyup='try{_try()}catch(e){}' />
+<!--button onclick="_try()" >Run code</button-->
+</form>
+
+<div id="main" >
+
+</div>
+
+</body>
+
+</html>
